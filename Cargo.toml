@@ -1,0 +1,13 @@
+[package]
+name = "wcxhead"
+description = "Definitions of error codes, flags and callbacks for Total Commander packer plugins"
+repository = "https://github.com/nabijaczleweli/wcxhead.rs"
+documentation = "https://rawcdn.githack.com/nabijaczleweli/wcxhead.rs/doc/wcxhead/index.html"
+readme = "README.md"
+license = "MIT"
+# Remember to also update in appveyor.yml
+version = "0.1.0"
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
+
+
+[dependencies]
