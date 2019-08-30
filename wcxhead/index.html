@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `wcxhead` crate."><meta name="keywords" content="rust, rustlang, rust-lang, wcxhead"><title>wcxhead - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../wcxhead/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate wcxhead</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all wcxhead's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#constants">Constants</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'wcxhead', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/wcxhead/lib.rs.html#1-695' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>wcxhead</a></span></h1><div class='docblock'><p>Contents of file wcxhead.h
+It contains definitions of error codes, flags and callbacks</p>
+<h1 id="error-codes" class="section-header"><a href="#error-codes">Error Codes</a></h1>
+<p>Use the following values when you want to inform Totalcmd that an error ocurred.</p>
+<table><thead><tr><th>Constant</th><th>Value</th><th>Description</th></tr></thead><tbody>
+<tr><td></td><td>0</td><td>Success</td></tr>
+<tr><td>E_END_ARCHIVE</td><td>10</td><td>No more files in archive</td></tr>
+<tr><td>E_NO_MEMORY</td><td>11</td><td>Not enough memory</td></tr>
+<tr><td>E_BAD_DATA</td><td>12</td><td>CRC error in the data of the currently unpacked file</td></tr>
+<tr><td>E_BAD_ARCHIVE</td><td>13</td><td>The archive as a whole is bad, e.g. damaged headers</td></tr>
+<tr><td>E_UNKNOWN_FORMAT</td><td>14</td><td>Archive format unknown</td></tr>
+<tr><td>E_EOPEN</td><td>15</td><td>Cannot open existing file</td></tr>
+<tr><td>E_ECREATE</td><td>16</td><td>Cannot create file</td></tr>
+<tr><td>E_ECLOSE</td><td>17</td><td>Error closing file</td></tr>
+<tr><td>E_EREAD</td><td>18</td><td>Error reading from file</td></tr>
+<tr><td>E_EWRITE</td><td>19</td><td>Error writing to file</td></tr>
+<tr><td>E_SMALL_BUF</td><td>20</td><td>Buffer too small</td></tr>
+<tr><td>E_EABORTED</td><td>21</td><td>Function aborted by user</td></tr>
+<tr><td>E_NO_FILES</td><td>22</td><td>No files found</td></tr>
+<tr><td>E_TOO_MANY_FILES</td><td>23</td><td>Too many files to pack</td></tr>
+<tr><td>E_NOT_SUPPORTED</td><td>24</td><td>Function not supported</td></tr>
+</tbody></table>
+<h1 id="unicode-support" class="section-header"><a href="#unicode-support">Unicode Support</a></h1>
+<p>With Total Commander 7.5 (packer plugin interface 2.20), Unicode support has been added to all plugin types. In principle,
+you need to implement the same functions as for ANSI, with two differences: The function name is changed from FunctionName
+to FunctionNameW, and Ansi strings are changed to wide char names.</p>
+<p>Total Commander will call the Unicode functions on all NT-based systems (Windows NT, 2000, XP) if they are present. If not,
+or on Windows 9x/ME, Total Commander will call the Ansi functions.</p>
+<p>The following functions of the packer plugin interface support Unicode:</p>
+<p>OpenArchiveW<br />
+ReadHeaderExW<br />
+ProcessFileW<br />
+SetChangeVolProcW<br />
+SetProcessDataProcW<br />
+PackFilesW<br />
+DeleteFilesW<br />
+StartMemPackW<br />
+CanYouHandleThisFileW<br /></p>
+<p>The following functions do not exist in a Unicode form and must be implemented as Ansi:</p>
+<p>ReadHeader - use ReadHeaderEx<br />
+CloseArchive<br />
+GetPackerCaps<br />
+ConfigurePacker<br />
+PackToMem<br />
+DoneMemPack<br />
+PackSetDefaultParams<br />
+ReadHeaderEx</p>
+<p>What's the easiest way to support Unicode in an existing plugin?</p>
+<ol>
+<li>
+<p>Get my sample plugin fsplugin (file system plugins section) even if you write a different type of plugin!</p>
+</li>
+<li>
+<p>Add the files cunicode.h and cunicode.cpp to your project. They contain various functions to make Unicode support easier.</p>
+</li>
+<li>
+<p>Convert your existing functions to Unicode and rename them to FunctionNameW.
+For all file functions like CreateFile, do not call their Unicode counterpart CreateFileW directly.
+Instead, call the functions from cunicode.cpp like CreateFileT.
+These functions automatically call the right Unicode or Ansi function,
+and even support file name lengths &gt;259 characters!</p>
+</li>
+<li>
+<p>For each converted function like FunctionNameW, recreate a function FunctionName which you call this way:</p>
+</li>
+</ol>
+<pre><code class="language-c">int __stdcall FunctionName(char* SomeString1,char* SomeString2)
+{
+    WCHAR SomeString1W[wdirtypemax],SomeString2W[wdirtypemax];
+    return FunctionNameW(awfilenamecopy(SomeString1W,SomeString1),awfilenamecopy(SomeString2W,SomeString2));
+}
+</code></pre>
+<p>The Macro awfilenamecopy will convert the Ansi string SomeString1 to Unicode and store it inSomeString1W. This variable
+must not be a pointer, because awfilenamecopy uses &quot;countof&quot; to get the target length.</p>
+<h1 id="64-bit-support" class="section-header"><a href="#64-bit-support">64-bit support</a></h1>
+<p>With Total Commander 8, Total Commander is now also available in 64-bit. Since plugins are simple dlls, and 64-bit programs
+can only load 64-bit dlls, a plugin needs to be re-compiled with a 64-bit compiler to work with 64-bit Total Commander.</p>
+<p><strong>IMPORTANT</strong>: A 64-bit plugin must have the same name as the 32-bit plugin and be in the same directory, but '64' must be
+appended to the extension. Example: filesystem.wcx -&gt; filesystem.wcx64. 64-bit-only plugins must also end with '64'.</p>
+<p>Since all 64-bit Windows versions support Unicode, it's sufficient to write a 64-bit Unicode-only plugin. However, if your
+existing 32-bit plugin only supports ANSI functions, you can port it without modifications to 64 bit. Total Commander
+64-bit also supports the ANSI functions if it cannot find the Unicode functions. 64-bit Unicode plugins do not have an
+extension starting with 'u', they have the normal 'wcx64' extension.</p>
+<h3 id="some-porting-notes" class="section-header"><a href="#some-porting-notes">Some porting notes:</a></h3>
+<p>All integer parameters in plugin functions remain 32-bit (e.g. in C: int, long, DWORD; Delphi: integer, dword), only
+pointers and handles are 64-bit wide now. Recompiling a program or dll with a 64-bit compiler usually takes care of this
+automatically without needing many changes. Problems can arise when converting pointers to integer or vice versa. Make sure
+to use 64-bit integer variables (e.g. size_t in C, ptrint or ptruint in Lazarus) for such operations.</p>
+<h3 id="whats-the-easiest-way-to-convert-an-existing-plugin-to-64-bit" class="section-header"><a href="#whats-the-easiest-way-to-convert-an-existing-plugin-to-64-bit">What's the easiest way to convert an existing plugin to 64-bit?</a></h3><h4 id="1-if-the-plugin-was-written-in-c-or-c" class="section-header"><a href="#1-if-the-plugin-was-written-in-c-or-c">1. If the plugin was written in C or C++:</a></h4>
+<p>If you have Visual Studio Professional 2005 or later, a 64-bit compiler is already included. If you use the free Express
+version or Visual Studio 2003, you need to install the Windows Software Development Kit (SDK) in addition to Visual Studio
+Express.</p>
+<p>Here is how to add 64-bit support to an existing plugin:</p>
+<ol>
+<li>
+<p>Check the toolbars in Visual Studio: There are comboboxes for the compile type (Debug or Release), and one which shows
+&quot;Win32&quot;.</p>
+</li>
+<li>
+<p>Open the one showing &quot;Win32&quot;, and click on the &quot;Configuration manager&quot;.</p>
+</li>
+<li>
+<p>Click on &quot;New&quot; in the Active Solution Platform list (right side). A new dialog box &quot;New Solution Platform&quot; will be shown.</p>
+</li>
+<li>
+<p>In the upper field, choose &quot;x64&quot;</p>
+</li>
+<li>
+<p>In the lower field, &quot;copy from&quot;, choose &quot;Win32&quot;</p>
+</li>
+<li>
+<p>Make sure the checkbox &quot;Create new project platform&quot; is on</p>
+</li>
+<li>
+<p>Click OK<br />
+See also: http://msdn.microsoft.com/en-us/library/9yb4317s.aspx</p>
+</li>
+<li>
+<p>Now you can switch in the same project between Win32 and x64. Switch to x64.</p>
+</li>
+<li>
+<p>Open the settings of your project.</p>
+</li>
+<li>
+<p>You should set the following options:<br />
+C++ - Code generation - runtime library: Multi-threaded-Debug (/Mtd) &lt;- not multithreaded debug dll !<br />
+Linker - General - output file: wcx/pluginname.wcx64</p>
+</li>
+</ol>
+<h5 id="download-links" class="section-header"><a href="#download-links">Download links:</a></h5>
+<ol>
+<li>Visual Studio Express C++ edition:<br />
+http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express</li>
+<li>Windows Software Development Kit (SDK):<br />
+http://msdn.microsoft.com/en-us/windows/bb980924.aspx</li>
+</ol>
+<h4 id="2-if-the-plugin-was-written-in-delphi-or-free-pascal" class="section-header"><a href="#2-if-the-plugin-was-written-in-delphi-or-free-pascal">2. If the plugin was written in Delphi or Free Pascal:</a></h4>
+<p>There is a 64-bit Lazarus/Free Pascal available, which can be used to create 64-bit dlls. Total Commander itself was
+compiled with Lazarus as a 64-bit application. There are menu items in the &quot;Tools&quot; menu to convert Delphi projects and
+forms to Lazarus.</p>
+<p>Lazarus/Free Pascal works a bit differently from Delphi, so some functions may need to be changed. Here are the problems
+encountered when porting Total Commander:</p>
+<ol>
+<li>Free pascal is different -&gt; Use {$MODE Delphi} in all *.pas files to handle functions the Delphi way</li>
+<li>strnew creates a NIL pointer when the passed pchar is 0 bytes long. -&gt; Use your own strnew function.</li>
+<li>Windows messages below WM_USER are not passed to the windows procedure. -&gt; Use SetWindowLongPtr to subclass the window</li>
+<li>The calculation  p-buffer  is not working when p is a pwidechar, buffer an array of widechar -&gt; use p-pwidechar(@bufffer)</li>
+<li>INVALID_HANDLE_VALUE is incorrectly set to 0 instead of -1 in lcltype.pp! -&gt; Put &quot;windows&quot; at end of &quot;uses&quot; command.</li>
+</ol>
+<h5 id="download-links-1" class="section-header"><a href="#download-links-1">Download links:</a></h5>
+<p>You should download and install the 64-bit daily snapshot from<br />
+http://www.lazarus.freepascal.org/<br />
+Click on &quot;Daily snapshots&quot;, then on e.g. Lazarus + fpc 2.4.4     <strong>win64</strong><br />
+The final releases are very outdated, so the snapshots usually work much better.</p>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
+<p>A plugin using this crate can be found <a href="https://github.com/nabijaczleweli/totalcmd-hrx">here</a>.</p>
+<h1 id="special-thanks" class="section-header"><a href="#special-thanks">Special thanks</a></h1>
+<p>To all who support further development on <a href="https://patreon.com/nabijaczleweli">Patreon</a>, in particular:</p>
+<ul>
+<li>ThePhD</li>
+</ul>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.PackDefaultParamStruct.html" title='wcxhead::PackDefaultParamStruct struct'>PackDefaultParamStruct</a></td><td class='docblock-short'><p>PackDefaultParamStruct is passed to <code>PackSetDefaultParams</code> to inform the plugin about the current plugin interface version
+and ini file location.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.tHeaderData.html" title='wcxhead::tHeaderData struct'>tHeaderData</a></td><td class='docblock-short'><p>tHeaderData is a structure used in <code>ReadHeader</code>.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.tHeaderDataEx.html" title='wcxhead::tHeaderDataEx struct'>tHeaderDataEx</a></td><td class='docblock-short'><p>tHeaderDataEx is a structure used in ReadHeaderEx.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.tHeaderDataExW.html" title='wcxhead::tHeaderDataExW struct'>tHeaderDataExW</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="struct" href="struct.tOpenArchiveData.html" title='wcxhead::tOpenArchiveData struct'>tOpenArchiveData</a></td><td class='docblock-short'><p>tOpenArchiveData is used in <code>OpenArchive</code>.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.tOpenArchiveDataW.html" title='wcxhead::tOpenArchiveDataW struct'>tOpenArchiveDataW</a></td><td class='docblock-short'></td></tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table><tr class='module-item'><td><a class="constant" href="constant.BACKGROUND_MEMPACK.html" title='wcxhead::BACKGROUND_MEMPACK constant'>BACKGROUND_MEMPACK</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.BACKGROUND_PACK.html" title='wcxhead::BACKGROUND_PACK constant'>BACKGROUND_PACK</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.BACKGROUND_UNPACK.html" title='wcxhead::BACKGROUND_UNPACK constant'>BACKGROUND_UNPACK</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.E_BAD_ARCHIVE.html" title='wcxhead::E_BAD_ARCHIVE constant'>E_BAD_ARCHIVE</a></td><td class='docblock-short'><p>The archive as a whole is bad, e.g. damaged headers</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_BAD_DATA.html" title='wcxhead::E_BAD_DATA constant'>E_BAD_DATA</a></td><td class='docblock-short'><p>CRC error in the data of the currently unpacked file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_EABORTED.html" title='wcxhead::E_EABORTED constant'>E_EABORTED</a></td><td class='docblock-short'><p>Function aborted by user</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_ECLOSE.html" title='wcxhead::E_ECLOSE constant'>E_ECLOSE</a></td><td class='docblock-short'><p>Error closing file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_ECREATE.html" title='wcxhead::E_ECREATE constant'>E_ECREATE</a></td><td class='docblock-short'><p>Cannot create file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_END_ARCHIVE.html" title='wcxhead::E_END_ARCHIVE constant'>E_END_ARCHIVE</a></td><td class='docblock-short'><p>No more files in archive</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_EOPEN.html" title='wcxhead::E_EOPEN constant'>E_EOPEN</a></td><td class='docblock-short'><p>Cannot open existing file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_EREAD.html" title='wcxhead::E_EREAD constant'>E_EREAD</a></td><td class='docblock-short'><p>Error reading from file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_EWRITE.html" title='wcxhead::E_EWRITE constant'>E_EWRITE</a></td><td class='docblock-short'><p>Error writing to file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_NOT_SUPPORTED.html" title='wcxhead::E_NOT_SUPPORTED constant'>E_NOT_SUPPORTED</a></td><td class='docblock-short'><p>Function not supported</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_NO_FILES.html" title='wcxhead::E_NO_FILES constant'>E_NO_FILES</a></td><td class='docblock-short'><p>No files found</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_NO_MEMORY.html" title='wcxhead::E_NO_MEMORY constant'>E_NO_MEMORY</a></td><td class='docblock-short'><p>Not enough memory</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_SMALL_BUF.html" title='wcxhead::E_SMALL_BUF constant'>E_SMALL_BUF</a></td><td class='docblock-short'><p>Buffer too small</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_TOO_MANY_FILES.html" title='wcxhead::E_TOO_MANY_FILES constant'>E_TOO_MANY_FILES</a></td><td class='docblock-short'><p>Too many files to pack</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.E_UNKNOWN_FORMAT.html" title='wcxhead::E_UNKNOWN_FORMAT constant'>E_UNKNOWN_FORMAT</a></td><td class='docblock-short'><p>Archive format unknown</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.MEMPACK_DONE.html" title='wcxhead::MEMPACK_DONE constant'>MEMPACK_DONE</a></td><td class='docblock-short'><p>Function call finished OK, there is no more data</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.MEMPACK_OK.html" title='wcxhead::MEMPACK_OK constant'>MEMPACK_OK</a></td><td class='docblock-short'><p>Function call finished OK, but there is more data</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.MEM_OPTIONS_WANTHEADERS.html" title='wcxhead::MEM_OPTIONS_WANTHEADERS constant'>MEM_OPTIONS_WANTHEADERS</a></td><td class='docblock-short'><p>Return archive headers with packed data</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_BY_CONTENT.html" title='wcxhead::PK_CAPS_BY_CONTENT constant'>PK_CAPS_BY_CONTENT</a></td><td class='docblock-short'><p>Detect archive type by content</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_DELETE.html" title='wcxhead::PK_CAPS_DELETE constant'>PK_CAPS_DELETE</a></td><td class='docblock-short'><p>Can delete files</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_ENCRYPT.html" title='wcxhead::PK_CAPS_ENCRYPT constant'>PK_CAPS_ENCRYPT</a></td><td class='docblock-short'><p>Plugin supports PK_PACK_ENCRYPT option</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_HIDE.html" title='wcxhead::PK_CAPS_HIDE constant'>PK_CAPS_HIDE</a></td><td class='docblock-short'><p>Show as normal files (hide packer icon), open with Ctrl+PgDn, not Enter</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_MEMPACK.html" title='wcxhead::PK_CAPS_MEMPACK constant'>PK_CAPS_MEMPACK</a></td><td class='docblock-short'><p>Supports packing in memory</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_MODIFY.html" title='wcxhead::PK_CAPS_MODIFY constant'>PK_CAPS_MODIFY</a></td><td class='docblock-short'><p>Can modify exisiting archives</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_MULTIPLE.html" title='wcxhead::PK_CAPS_MULTIPLE constant'>PK_CAPS_MULTIPLE</a></td><td class='docblock-short'><p>Archive can contain multiple files</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_NEW.html" title='wcxhead::PK_CAPS_NEW constant'>PK_CAPS_NEW</a></td><td class='docblock-short'><p>Can create new archives</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_OPTIONS.html" title='wcxhead::PK_CAPS_OPTIONS constant'>PK_CAPS_OPTIONS</a></td><td class='docblock-short'><p>Has options dialog</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CAPS_SEARCHTEXT.html" title='wcxhead::PK_CAPS_SEARCHTEXT constant'>PK_CAPS_SEARCHTEXT</a></td><td class='docblock-short'><p>Allow searching for text in archives created with this plugin</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPTOPT_MASTERPASS_SET.html" title='wcxhead::PK_CRYPTOPT_MASTERPASS_SET constant'>PK_CRYPTOPT_MASTERPASS_SET</a></td><td class='docblock-short'><p>The user already has a master password defined</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPT_COPY_PASSWORD.html" title='wcxhead::PK_CRYPT_COPY_PASSWORD constant'>PK_CRYPT_COPY_PASSWORD</a></td><td class='docblock-short'><p>Copy encrypted password to new archive name</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPT_DELETE_PASSWORD.html" title='wcxhead::PK_CRYPT_DELETE_PASSWORD constant'>PK_CRYPT_DELETE_PASSWORD</a></td><td class='docblock-short'><p>Delete password</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPT_LOAD_PASSWORD.html" title='wcxhead::PK_CRYPT_LOAD_PASSWORD constant'>PK_CRYPT_LOAD_PASSWORD</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPT_LOAD_PASSWORD_NO_UI.html" title='wcxhead::PK_CRYPT_LOAD_PASSWORD_NO_UI constant'>PK_CRYPT_LOAD_PASSWORD_NO_UI</a></td><td class='docblock-short'><p>Load password only if master password has already been entered!</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPT_MOVE_PASSWORD.html" title='wcxhead::PK_CRYPT_MOVE_PASSWORD constant'>PK_CRYPT_MOVE_PASSWORD</a></td><td class='docblock-short'><p>Move password when renaming an archive</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_CRYPT_SAVE_PASSWORD.html" title='wcxhead::PK_CRYPT_SAVE_PASSWORD constant'>PK_CRYPT_SAVE_PASSWORD</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_EXTRACT.html" title='wcxhead::PK_EXTRACT constant'>PK_EXTRACT</a></td><td class='docblock-short'><p>Extract to disk</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_OM_EXTRACT.html" title='wcxhead::PK_OM_EXTRACT constant'>PK_OM_EXTRACT</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_OM_LIST.html" title='wcxhead::PK_OM_LIST constant'>PK_OM_LIST</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_PACK_ENCRYPT.html" title='wcxhead::PK_PACK_ENCRYPT constant'>PK_PACK_ENCRYPT</a></td><td class='docblock-short'><p>Ask user for password, then encrypt</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_PACK_MOVE_FILES.html" title='wcxhead::PK_PACK_MOVE_FILES constant'>PK_PACK_MOVE_FILES</a></td><td class='docblock-short'><p>Delete original after packing</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_PACK_SAVE_PATHS.html" title='wcxhead::PK_PACK_SAVE_PATHS constant'>PK_PACK_SAVE_PATHS</a></td><td class='docblock-short'><p>Save path names of files</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_SKIP.html" title='wcxhead::PK_SKIP constant'>PK_SKIP</a></td><td class='docblock-short'><p>Skip this file</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_TEST.html" title='wcxhead::PK_TEST constant'>PK_TEST</a></td><td class='docblock-short'><p>Test file integrity</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_VOL_ASK.html" title='wcxhead::PK_VOL_ASK constant'>PK_VOL_ASK</a></td><td class='docblock-short'><p>Ask user for location of next volume</p>
+</td></tr><tr class='module-item'><td><a class="constant" href="constant.PK_VOL_NOTIFY.html" title='wcxhead::PK_VOL_NOTIFY constant'>PK_VOL_NOTIFY</a></td><td class='docblock-short'><p>Notify app that next volume will be unpacked</p>
+</td></tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table><tr class='module-item'><td><a class="type" href="type.tChangeVolProc.html" title='wcxhead::tChangeVolProc type'>tChangeVolProc</a></td><td class='docblock-short'><p>tChangeValueProc is a typedef of the function that asks the user to change volume.</p>
+</td></tr><tr class='module-item'><td><a class="type" href="type.tChangeVolProcW.html" title='wcxhead::tChangeVolProcW type'>tChangeVolProcW</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="type" href="type.tPkCryptProc.html" title='wcxhead::tPkCryptProc type'>tPkCryptProc</a></td><td class='docblock-short'><p>PkCryptProc is a callback function, which the plugin can call to store passwords in the secure password store, read them
+back, or copy them to a new connection.</p>
+</td></tr><tr class='module-item'><td><a class="type" href="type.tPkCryptProcW.html" title='wcxhead::tPkCryptProcW type'>tPkCryptProcW</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="type" href="type.tProcessDataProc.html" title='wcxhead::tProcessDataProc type'>tProcessDataProc</a></td><td class='docblock-short'><p>tProcessDataProc is a typedef of the function that notifies the user about the progress when un/packing files.</p>
+</td></tr><tr class='module-item'><td><a class="type" href="type.tProcessDataProcW.html" title='wcxhead::tProcessDataProcW type'>tProcessDataProcW</a></td><td class='docblock-short'></td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "wcxhead";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

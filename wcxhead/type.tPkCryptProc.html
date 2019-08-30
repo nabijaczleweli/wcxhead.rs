@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `tPkCryptProc` type in crate `wcxhead`."><meta name="keywords" content="rust, rustlang, rust-lang, tPkCryptProc"><title>wcxhead::tPkCryptProc - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc type"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../wcxhead/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Type Definition tPkCryptProc</p><div class="sidebar-elems"><p class='location'><a href='index.html'>wcxhead</a></p><script>window.sidebarCurrent = {name: 'tPkCryptProc', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/wcxhead/lib.rs.html#694' title='goto source code'>[src]</a></span><span class='in-band'>Type Definition <a href='index.html'>wcxhead</a>::<wbr><a class="type" href=''>tPkCryptProc</a></span></h1><pre class='rust typedef'>type tPkCryptProc = extern &quot;stdcall&quot; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.fn.html">fn</a>(CryptoNr: <a class="type" href="../libc/windows/type.c_int.html" title="type libc::windows::c_int">c_int</a>, Mode: <a class="type" href="../libc/windows/type.c_int.html" title="type libc::windows::c_int">c_int</a>, ArchiveName: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.char.html">char</a>, Password: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.char.html">char</a>, maxlen: <a class="type" href="../libc/windows/type.c_int.html" title="type libc::windows::c_int">c_int</a>) -&gt; <a class="type" href="../libc/windows/type.c_int.html" title="type libc::windows::c_int">c_int</a>;</pre><div class='docblock'><p>PkCryptProc is a callback function, which the plugin can call to store passwords in the secure password store, read them
+back, or copy them to a new connection.</p>
+<h1 id="declaration" class="section-header"><a href="#declaration">Declaration:</a></h1>
+<pre><code class="language-c">int __stdcall PkCryptProc(int CryptoNumber,int mode,
+         char* ArchiveName,char* Password,int maxlen);
+</code></pre>
+<h1 id="description-of-parameters" class="section-header"><a href="#description-of-parameters">Description of parameters:</a></h1><table>
+<tr><td>CryptoNumber</td>
+    <td>Here the plugin needs to pass the crypto number received through the `PkSetCryptCallback()` function.</td></tr>
+<tr><td>mode</td>
+    <td>The mode of operation:<br />
+    PK_CRYPT_SAVE_PASSWORD: Save password to password store<br />
+    PK_CRYPT_LOAD_PASSWORD: Load password from password store<br />
+    PK_CRYPT_LOAD_PASSWORD_NO_UI: Load password only if master password has already been entered<br />
+    PK_CRYPT_COPY_PASSWORD: Copy password to new connection. Here the second string parameter "Password" is not a password,
+    but the name of the target archive name<br />
+    PK_CRYPT_MOVE_PASSWORD: As above, but delete the source password<br />
+    PK_CRYPT_DELETE_PASSWORD: Delete the password of the given archive name</td></tr>
+<tr><td>ArchiveName</td>
+    <td>Name of the archive for this operation. The plugin can give any name here which can be stored in Windows ini
+        files. The plugin should encode names which cannot be stored in ini files, or give a reference code or so instead
+        of the file name.</td></tr>
+<tr><td>Password</td>
+    <td>Operation-specific, usually the password to be stored/retrieved, or the target name when copying/moving a
+        connection</td></tr>
+<tr><td>maxlen</td>
+    <td>Maximum length, in characters, the password buffer can store when calling one of the load functions</td></tr>
+</table>
+<h1 id="return-value" class="section-header"><a href="#return-value">Return value:</a></h1>
+<p>Total Commander returns one of these values:</p>
+<table>
+<tr><td>FS_FILE_OK</td><td>Success</td></tr>
+<tr><td>E_ECREATE</td> <td>Encrypt/Decrypt failed</td></tr>
+<tr><td>E_EWRITE</td>  <td>Could not write password to password store</td></tr>
+<tr><td>E_EREAD</td>   <td>Password not found in password store</td></tr>
+<tr><td>E_NO_FILES</td><td>No master password entered yet</td></tr>
+</table>
+<h1 id="note" class="section-header"><a href="#note">Note:</a></h1>
+<p>When showing the details of an existing archive, you should call PK_CRYPT_LOAD_PASSWORD_NO_UI first. In case of error
+E_NO_FILES, show a button &quot;Edit password&quot;. Only call PK_CRYPT_LOAD_PASSWORD when the user clicks that button, or tries to
+decrypt the archive. This way the user doesn't have to enter the master password if he just wanted to make some other
+changes to the archive settings.</p>
+</div></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "wcxhead";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
