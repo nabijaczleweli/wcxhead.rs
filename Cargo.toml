@@ -10,6 +10,9 @@ license = "MIT"
 version = "0.1.1"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
+[package.metadata.docs.rs]
+targets = ["x86_64-pc-windows-msvc"]
+
 
 [dependencies]
 libc = "0.2"
