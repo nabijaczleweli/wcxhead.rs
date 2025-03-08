@@ -1,7 +1,7 @@
 image:
   - Visual Studio 2022
 
-version: 0.1.0-{build}
+version: 0.1.1-{build}
 
 skip_tags: false
 
@@ -24,18 +24,18 @@ build_script:
   - cargo build --verbose --release
   - cargo doc --verbose --release
   -
-  - cp -r target/doc "wcxhead.rs-doc-v0.1.0"
-  - tar -caf "wcxhead.rs-doc-v0.1.0.tbz2" "wcxhead.rs-doc-v0.1.0"
-  - rm -rf "wcxhead.rs-doc-v0.1.0"
+  - cp -r target/doc "wcxhead.rs-doc-v0.1.1"
+  - tar -caf "wcxhead.rs-doc-v0.1.1.tbz2" "wcxhead.rs-doc-v0.1.1"
+  - rm -rf "wcxhead.rs-doc-v0.1.1"
 
 test: off
 
 artifacts:
-  - path: wcxhead.rs-doc-v0.1.0.tbz2
+  - path: wcxhead.rs-doc-v0.1.1.tbz2
 
 deploy:
   provider: GitHub
-  artifact: wcxhead.rs-doc-v0.1.0.tbz2
+  artifact: wcxhead.rs-doc-v0.1.1.tbz2
   auth_token:
     secure: q42bVqe6Vo/l9dQyArehIzuhIKUzH2JnsmPExSdliU0JdAn4cJIni87/JIh/QK+Z
   on:
